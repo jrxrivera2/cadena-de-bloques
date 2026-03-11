@@ -349,17 +349,25 @@ function traducirScanner() {
 }
 
 function onScanSuccess(decodedText) {
+    let id = null;
+
     try {
-        const data = JSON.parse(decodedText);
-        if (data.id && data.sistema === 'CervezaChain') {
-            document.getElementById('cons-id').value = data.id;
-            verificarBotella(data.id);
-            if (qrScanner) qrScanner.clear();
-        }
-    } catch {
-        document.getElementById('cons-id').value = decodedText;
-        verificarBotella(decodedText.trim());
+        const url = new URL(decodedText);
+        id = url.searchParams.get('verificar');
+    } catch {}
+
+    if (!id) {
+        try {
+            const data = JSON.parse(decodedText);
+            if (data.id) id = data.id;
+        } catch {}
     }
+
+    if (!id) id = decodedText.trim();
+
+    document.getElementById('cons-id').value = id;
+    verificarBotella(id);
+    if (qrScanner) qrScanner.clear();
 }
 
 function onScanFailure() {}
@@ -440,3 +448,14 @@ async function confirmarCompra() {
 
 // ========== INICIALIZACION ==========
 cargarListaFabricante();
+
+const params = new URLSearchParams(window.location.search);
+const verificarId = params.get('verificar');
+if (verificarId) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-tab="consumidor"]').classList.add('active');
+    document.getElementById('consumidor').classList.add('active');
+    document.getElementById('cons-id').value = verificarId;
+    verificarBotella(verificarId);
+}

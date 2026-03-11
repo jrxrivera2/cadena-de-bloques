@@ -32,7 +32,11 @@ app.post('/api/botella', async (req, res) => {
         const datosBotella = { nombre, marca, lote, fabricante, descripcion: descripcion || '' };
 
         const blockchain = new BlockChain(datosBotella);
-        const qrData = JSON.stringify({ id, nombre, marca, sistema: 'CervezaChain' });
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const qrData = `${baseUrl}/?verificar=${id}`;
+        // #region agent log
+        fetch('http://127.0.0.1:7288/ingest/54e2cbd9-8ea4-47a4-8dc1-51a995b1a22d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e9ca1a'},body:JSON.stringify({sessionId:'e9ca1a',location:'server.js:36',message:'QR data content POST-FIX',data:{qrData,id,baseUrl},timestamp:Date.now(),runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         const qrDataUrl = await QRCode.toDataURL(qrData, { width: 300, margin: 2 });
 
         botellas[id] = {
