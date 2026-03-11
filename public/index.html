@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CervezaChain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">&#127866;</div>
+                <h1>Cerveza<span>Chain</span></h1>
+            </div>
+            <div class="header-badge">&#9939; Blockchain Verificado</div>
+        </div>
+        <nav class="tabs">
+            <button class="tab active" data-tab="fabricante">
+                <span class="tab-icon">&#9874;</span> Fabricante
+            </button>
+            <button class="tab" data-tab="admin">
+                <span class="tab-icon">&#9881;</span> Administrador
+            </button>
+            <button class="tab" data-tab="consumidor">
+                <span class="tab-icon">&#128269;</span> Consumidor
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ==================== FABRICANTE ==================== -->
+        <div id="fabricante" class="panel active">
+            <div class="panel-header">
+                <h2>Panel del Fabricante</h2>
+                <p>Registra nuevas botellas y genera sus codigos QR unicos en la blockchain</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">&#127870; Registrar Nueva Botella</div>
+                    <div id="alertFabricante" class="alert"></div>
+                    <form id="formBotella">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nombre de la Cerveza</label>
+                                <input type="text" id="fab-nombre" placeholder="Ej: Golden Ale" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Marca</label>
+                                <input type="text" id="fab-marca" placeholder="Ej: CervezArt" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Lote</label>
+                                <input type="text" id="fab-lote" placeholder="Ej: LOTE-2026-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fabricante</label>
+                                <input type="text" id="fab-fabricante" placeholder="Nombre del fabricante" required>
+                            </div>
+                            <div class="form-group full">
+                                <label>Descripcion (opcional)</label>
+                                <textarea id="fab-descripcion" placeholder="Descripcion de la cerveza..."></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary btn-block">&#9889; Registrar Botella y Generar QR</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">&#128243; Codigo QR Generado</div>
+                    <div id="qrResult" class="qr-display">
+                        <div class="empty-state">
+                            <div class="icon">&#128243;</div>
+                            <p>Registra una botella para generar su codigo QR</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">&#128230; Botellas Registradas</div>
+                <div id="listaBotellasFab" class="table-wrapper">
+                    <div class="empty-state">
+                        <div class="icon">&#128230;</div>
+                        <p>Aun no hay botellas registradas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ADMINISTRADOR ==================== -->
+        <div id="admin" class="panel">
+            <div class="panel-header">
+                <h2>Panel del Administrador</h2>
+                <p>Gestiona la trazabilidad registrando eventos de transporte, mayorista y minorista</p>
+            </div>
+
+            <div id="statsAdmin" class="stats-grid"></div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">&#128203; Registrar Evento de Trazabilidad</div>
+                    <div id="alertAdmin" class="alert"></div>
+                    <form id="formTrazabilidad">
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label>Seleccionar Botella</label>
+                                <select id="admin-botella" required>
+                                    <option value="">-- Seleccionar botella --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Evento</label>
+                                <select id="admin-tipo" required>
+                                    <option value="">-- Seleccionar tipo --</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="mayorista">Mayorista</option>
+                                    <option value="minorista">Minorista</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Responsable</label>
+                                <input type="text" id="admin-responsable" placeholder="Nombre del responsable" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Ubicacion</label>
+                                <input type="text" id="admin-ubicacion" placeholder="Ciudad o direccion">
+                            </div>
+                            <div class="form-group">
+                                <label>Descripcion</label>
+                                <input type="text" id="admin-descripcion" placeholder="Detalle del evento" required>
+                            </div>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary btn-block">&#128190; Registrar Evento en Blockchain</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">&#128337; Historial de Trazabilidad</div>
+                    <div id="historialAdmin">
+                        <div class="empty-state">
+                            <div class="icon">&#128337;</div>
+                            <p>Selecciona una botella para ver su historial</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">&#128203; Todas las Botellas</div>
+                <div id="listaBotellasAdmin" class="table-wrapper">
+                    <div class="empty-state">
+                        <div class="icon">&#128230;</div>
+                        <p>No hay botellas en el sistema</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CONSUMIDOR ==================== -->
+        <div id="consumidor" class="panel">
+            <div class="panel-header">
+                <h2>Panel del Consumidor</h2>
+                <p>Escanea el codigo QR de tu cerveza para verificar su autenticidad y trazabilidad</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">&#128275; Escanear Codigo QR</div>
+                    <div id="qr-reader"></div>
+                    <div style="text-align:center; margin:16px 0; color:var(--gray-400); font-size:13px;">
+                        - o ingresa el codigo manualmente -
+                    </div>
+                    <div class="scan-input-group">
+                        <input type="text" id="cons-id" placeholder="Ingresa el ID de la botella (ej: A1B2C3D4)">
+                        <button class="btn btn-primary" onclick="verificarManual()">Verificar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">&#128272; Resultado de Verificacion</div>
+                    <div id="verifyResult">
+                        <div class="empty-state">
+                            <div class="icon">&#128272;</div>
+                            <p>Escanea o ingresa un codigo para verificar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detalleConsumidor" class="card" style="display:none;">
+                <div class="card-title">&#128279; Historial Completo de Trazabilidad</div>
+                <div id="historialConsumidor"></div>
+            </div>
+
+            <div id="compraCard" class="card" style="display:none;">
+                <div class="card-title">&#128722; Confirmar Compra</div>
+                <div id="alertConsumidor" class="alert"></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tu nombre (opcional)</label>
+                        <input type="text" id="cons-nombre" placeholder="Nombre del consumidor">
+                    </div>
+                    <div class="form-group" style="display:flex; align-items:flex-end;">
+                        <button class="btn btn-success btn-block" onclick="confirmarCompra()">&#10004; Confirmar Compra</button>
+                    </div>
+                </div>
+                <p style="margin-top:12px; font-size:12px; color:var(--gray-400);">
+                    Al confirmar, la botella se marcara como vendida y el codigo QR sera invalidado.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
